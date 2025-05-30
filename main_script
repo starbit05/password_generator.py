@@ -1,0 +1,119 @@
+from tkinter import *
+from tkinter.ttk import *
+from ttkthemes import ThemedTk
+import random
+import pyperclip
+
+screen = ThemedTk(theme="equilux")
+screen.configure(themebg="black")
+
+screen.geometry('600x450')
+screen.title('password-genx')
+screen.resizable(height=False, width=False)
+
+def encript():
+    global shift
+    password = word.get()
+    shiftpassword = ""
+
+    for i in password:
+        if i not in characters:
+            shiftpassword += i
+        else:
+            pos=characters.index(i)
+            newpos = (pos+shift) % len(characters)
+            shiftpassword += characters[newpos]
+            enword.delete(0, END)
+            enword.insert(0,shiftpassword)
+
+def copyp():
+    pyperclip.copy(word.get())
+
+choice = IntVar()
+choice.set(1)
+
+pas = Label(screen, text= "password")
+word = Entry(screen)
+copi = Button(screen, text="copy", command=copyp)
+length1 = Label(screen, text="length")
+
+rb1 = Radiobutton(screen, text="1",value=1,variable=choice)
+rb2 = Radiobutton(screen, text="2",value=2,variable=choice)
+rb3 = Radiobutton(screen, text="3",value=3,variable=choice)
+
+
+def Dencript():
+    global shift
+    password = enword.get()
+    shiftpassword = ""
+    for i in password:
+        if i not in characters:
+            shiftpassword -= i
+        else:
+            pos=characters.index(i)
+            newpos = (pos-shift) % len(characters)
+            shiftpassword += characters[newpos]
+            unword.delete(0, END)
+            unword.insert(0,shiftpassword)
+
+enpas = Label(screen, text= "encrypted password")
+enword = Entry(screen)
+en = Button(screen,text="encrypt",  command=encript)
+unpas = Label(screen, text= "decrypted password")
+unword = Entry(screen)
+un = Button(screen, text="decrypt", command=Dencript)
+
+
+a ="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+N ="0123456789"
+sp = "!@#$%^&*()_+="
+characters = a + N + sp
+
+
+def generate():
+    AN = a + N
+    pasresult = ""
+    length = int(word.get())
+    diff =  choice.get()
+    if diff == 1 :
+        for i in range(length):
+            rand = random.choice(a)
+            pasresult += rand
+    elif diff == 2 :
+        for i in range(length):
+            rand = random.choice(AN)
+            pasresult += rand
+
+    elif diff == 3 :
+        Aasp = AN + sp
+        for i in range(length):
+            rand = random.choice(Aasp)
+            pasresult += rand
+
+    word.delete(0,END)
+    word.insert(0,pasresult)
+
+# SHIT FUUUUUUUUUUUUUUUUUUUUUUCK
+
+shift = random.randint(1,10)
+print(shift)
+
+x = Button(text="generate", command=generate)
+
+pas.grid(column=0,row=0)
+word.grid(column=0,row=1)
+copi.grid(column=2,row=0)
+length1.grid(column=0,row=2)
+enpas.grid(column=0,row=2)
+enword.grid(column=1,row=2)
+en.grid(column=2,row=2)
+unpas.grid(column=0,row=3)
+unword.grid(column=1,row=3)
+un.grid(column=2,row=3)
+x.grid()
+
+rb3.grid()
+rb2.grid()
+rb1.grid()
+
+screen.mainloop()
